@@ -1,0 +1,64 @@
+body,
+html {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: gray;
+}
+
+.background {
+  background-color: white;
+  width: 800px;
+  height: 100%;
+  margin: auto;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  gap: 0.625%;
+  /* position: fixed; */
+}
+
+a {
+  flex: 1;
+  text-decoration: none;
+  outline: gray;
+  text-align: center;
+  line-height: 3;
+  color: black;
+}
+
+a:link,
+a:visited,
+a:focus {
+  background: rgb(191, 222, 244);
+  color: black;
+}
+
+a:hover {
+  background: rgb(174, 195, 233);
+}
+
+a:active {
+  background: rgb(89, 125, 191);
+  color: white;
+}
+
+.name_header {
+  text-decoration: none;  
+  outline: none;
+  text-align: center;  
+  font-size: 2.5em;
+  font-weight: 400;
+  margin: 0;
+  color: rgb(0, 0, 0);
+}
+
+.header_container {
+  position: fixed;
+  background-color: white;
+  width: 800px;
+  height: 100%;
+  margin: auto;
+  padding: 0;
+}

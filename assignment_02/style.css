@@ -7,10 +7,10 @@ html {
 
 .background {
   background-color: white;
-  width: 800px;
+  width: 600px;
   height: 100%;
   margin: auto;
-  padding: 0;
+  padding: 100px; 
 }
 
 .container {
@@ -29,7 +29,7 @@ a {
 }
 
 a:link,
-a:visited,
+a:visited
 a:focus {
   background: rgb(191, 222, 244);
   color: black;
@@ -40,8 +40,8 @@ a:hover {
 }
 
 a:active {
-  background: rgb(89, 125, 191);
   color: white;
+  background-color: rgb(89, 125, 191);
 }
 
 .name_header {
@@ -57,8 +57,19 @@ a:active {
 .header_container {
   position: fixed;
   background-color: white;
-  width: 800px;
-  height: 100%;
+  width: 600px;
+  height: 100px;
   margin: auto;
-  padding: 0;
+  top: 0;
+}
+
+img {
+  max-width: 100%;
+  max-height:100%;
+}
+
+.proj_text {
+  top: 50%;
+  text-align: center;
+  color: rgb(0, 0, 0);
 }

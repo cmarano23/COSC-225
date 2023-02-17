@@ -20,3 +20,7 @@
     height: 500px;
     border: 5px solid white;
 }
+
+#grid-box:hover {
+    background-color: white !important;
+}

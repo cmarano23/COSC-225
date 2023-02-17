@@ -1,4 +1,4 @@
-function drawGrid() {
+function drawTiles() {
     const boxElement = document.querySelector(".grid-box");
     for (let i = 0; i < 10; i++) {
         var r = i * 10;
@@ -7,7 +7,7 @@ function drawGrid() {
         for (let j = 0; j < 10; j++) {
             b = b + (j * 15)
             let box = document.createElement("div");
-            // box.classList.add("grid-box");
+            box.id = "grid-box"
             box.style.position = "relative";
             box.style.float = "left";
             box.style.width = "50px";

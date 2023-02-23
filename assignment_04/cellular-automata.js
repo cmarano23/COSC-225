@@ -109,3 +109,6 @@ function drawAutomata(config, rule) {
         config = applyRule(config, rule);
     }
 }
+
+// Code for the tester
+module.exports = { applyRule };

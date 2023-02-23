@@ -17,6 +17,7 @@ function createHeader(rule) {
     headerText.appendChild(header);
 }
 
+//Function to draw the boxes given a row
 function drawBoxes(row) {
     const boxElement = document.querySelector("#grid-body");
     for (let i = 0; i < row.length; i++) {
@@ -39,23 +40,73 @@ function drawBoxes(row) {
 
 // Function to apply the rule to the grid
 function applyRule(config, rule) {
-    // Make the header
-    createHeader(rule);
+    //Get the binary of the rule
+    var binary = ruleToBinary(rule);
 
-    var lenConfig = config.length;
-    
-    // Create a 2D array to hold the grid
-    var rows = new Array(lenConfig);
-    rows[0] = config;
-    for (let j = 1; j < lenConfig; j++) {
-        rows[j] = new Array(lenConfig).fill(0);
-        for (let i = 0; i < lenConfig; i++) {
-            
+    //Get the results of the cases from the rule
+    var case7 = binary[0];
+    var case6 = binary[1];
+    var case5 = binary[2];
+    var case4 = binary[3];
+    var case3 = binary[4];
+    var case2 = binary[5];
+    var case1 = binary[6];
+    var case0 = binary[7];
+
+    //Create a new array to hold the new configuration
+    var newConfig = new Array(config.length);
+
+    //Iterate through each cell and apply the rule
+    for (let i = 0; i < config.length; i++) {
+        // Store the left value (and check for edge case)
+        if (i == 0) {
+            var left = config[config.length - 1];
+        } else {
+            var left = config[i - 1];
+        }
+
+        // Store the middle value 
+        var middle = config[i];
+
+        // Store the right value (and check for edge case)
+        if (i == config.length - 1) {
+            var right = config[0];
+        } else {
+            var right = config[i + 1];
+        } 
+
+        // Check the cases
+        if (left == 1 && middle == 1 && right == 1) {
+            newConfig[i] = case7;
+        } else if (left == 1 && middle == 1 && right == 0) {
+            newConfig[i] = case6;
+        } else if (left == 1 && middle == 0 && right == 1) {
+            newConfig[i] = case5;
+        } else if (left == 1 && middle == 0 && right == 0) {
+            newConfig[i] = case4;
+        } else if (left == 0 && middle == 1 && right == 1) {
+            newConfig[i] = case3;
+        } else if (left == 0 && middle == 1 && right == 0) {
+            newConfig[i] = case2;
+        } else if (left == 0 && middle == 0 && right == 1) {
+            newConfig[i] = case1;
+        } else if (left == 0 && middle == 0 && right == 0) {
+            newConfig[i] = case0;
         }
     }
 
-    // Draw the grid
-    drawBoxes(rows[0]);
-    drawBoxes(rows[1]);
+    // Return the new configuration
+    return newConfig;
+}
 
+// Function to draw the automata
+function drawAutomata(config, rule) {
+    // Make the header
+    createHeader(rule);
+    
+    // Create the grid
+    for (let i = 0; i < 50; i++) {
+        drawBoxes(config);
+        config = applyRule(config, rule);
+    }
 }

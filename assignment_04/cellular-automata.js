@@ -104,7 +104,7 @@ function drawAutomata(config, rule) {
     createHeader(rule);
     
     // Create the grid
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         drawBoxes(config);
         config = applyRule(config, rule);
     }

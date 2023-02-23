@@ -25,7 +25,7 @@
 
 #grid-body {
     width: 510px;
-    height: 510px;
+    height: 100%;
 }
 
 .box {

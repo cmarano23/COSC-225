@@ -28,7 +28,6 @@ function drawBoxes(row) {
         box.style.margin = "auto";
         box.style.width = "10px";
         box.style.height = "10px";
-        // box.style.border = "0.5px solid black";
         if (row[i] == 1) {
             box.style.backgroundColor = "black";
         } else {

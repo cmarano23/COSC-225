@@ -1,0 +1,28 @@
+svg {
+    position: relative;
+}
+
+.background {
+    background-color: pink;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.dot {
+    r: 10px;
+    stroke: black;
+    fill: white;
+    stroke-width: 2;
+}
+
+.line {
+    r: 5px;
+    stroke: black;
+    fill: black;
+    stroke-width: 2;
+}

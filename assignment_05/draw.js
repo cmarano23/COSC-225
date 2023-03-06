@@ -54,7 +54,6 @@ function drawLine(e) {
         } else {
             // If not supposed to be drawing, remove this event listener
             box.removeEventListener("mousemove",followLine);
-            console.log("else test");
         }
     });
 }

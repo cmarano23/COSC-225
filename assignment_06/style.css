@@ -1,8 +1,23 @@
 /* Add Your Styles Here! */
+body{
+    background-color: rgb(156, 230, 244);
+    height: 100%;
+    width: 100%;
+}
+
 #root{
     align-items: center;
     text-align: center;
     position: relative;
+}
+
+.text{
+    color: black;
+    font-family: helvetica;
+}
+
+button{
+    border-radius: 4px;
 }
 
 svg {
@@ -15,15 +30,9 @@ svg {
     position: relative;
     align-items: center;
     text-align: center;
-}
-
-.vertex {
-    r: 10px;
     stroke: black;
-    fill: black;
-    stroke-width: 4;
+    stroke-width: 3px;
 }
-
 
 .edge {
     stroke: black;

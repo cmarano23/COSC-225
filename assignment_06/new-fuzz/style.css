@@ -1,0 +1,30 @@
+/* Add Your Styles Here! */
+svg {
+    position: relative;
+    display: block;
+}
+
+.vertex {
+    r: 10px;
+    stroke: black;
+    fill: black;
+    stroke-width: 4;
+}
+
+
+.edge {
+    stroke: black;
+    stroke-width: 4px;
+}
+
+.highlight {
+    fill: white !important;
+    stroke: red !important;
+    stroke-width: 5px !important;
+}
+
+.overlay-vertex {
+    stroke: yellow;
+    fill: rgb(0, 0, 0, 20%);
+    stroke-width: 5;
+}

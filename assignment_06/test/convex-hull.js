@@ -13,7 +13,7 @@ function Point(x, y, id) {
 
     // Compare this Point to another Point p for the purposes of
     // sorting a collection of points. The comparison is according to
-    // lexicographical ordering. That is, (x, y) < (x', y') if (1) x <
+    // lexicographical ordering. That is, (x, y) < (x', y'm) if (1) x <
     // x' or (2) x == x' and y < y'.
     this.compareTo = function (p) {
         if (this.x > p.x) {
@@ -139,22 +139,22 @@ function ConvexHullViewer(svg, ps) {
 
     // Function to draw edge
     this.addEdge = function (pt1, pt2) {
-        const edgeElt = document.createElementNS(SVG_NS, "line");
-        edgeElt.setAttributeNS(null, "x1", pt1.x);
-        edgeElt.setAttributeNS(null, "y1", pt1.y);
-        edgeElt.setAttributeNS(null, "x2", pt2.x);
-        edgeElt.setAttributeNS(null, "y2", pt2.y);
-        edgeElt.classList.add("edge");
+		const edgeElt = document.createElementNS(SVG_NS, "line");
+		edgeElt.setAttributeNS(null, "x1", pt1.x);
+		edgeElt.setAttributeNS(null, "y1", pt1.y);
+		edgeElt.setAttributeNS(null, "x2", pt2.x);
+		edgeElt.setAttributeNS(null, "y2", pt2.y);
+		edgeElt.classList.add("edge");
         edgeElt.id = "edge-" + pt1.id + "-" + pt2.id;
-        this.edgeEltsId[edgeElt.id] = edgeElt;
+		this.edgeEltsId[edgeElt.id] = edgeElt;
         this.edgeElts.push(edgeElt);
-        this.edgeGroup.appendChild(edgeElt);
+		this.edgeGroup.appendChild(edgeElt);
         this.svg.appendChild(edgeElt);
     }
 
     // Function to remove edge
     this.removeEdge = function (edge) {
-        if (this.svg.contains(edge)) {
+        if (this.svg.contains(edge)){
             this.svg.removeChild(edge);
         }
     }
@@ -187,19 +187,18 @@ function ConvexHullViewer(svg, ps) {
     this.overlayGroup = document.createElementNS(SVG_NS, "g");
     this.svg.appendChild(this.overlayGroup);
 
-    // Function to add an overlay point
     this.addOverlayPoint = function (pt) {
         const elt = document.createElementNS(SVG_NS, "circle");
         elt.classList.add("overlay-vertex");
         elt.setAttributeNS(null, "cx", pt.x);
         elt.setAttributeNS(null, "cy", pt.y);
         elt.setAttributeNS(null, "r", 15);
+        elt.setAttributeNS(null, "id", pt.id);
         this.overlayGroup.appendChild(elt);
         this.overlayPointsId[pt.id] = elt;
         this.overlayPoints.push(pt);
     }
 
-    // Function to remove overlay point
     this.removeOverlayPoint = function (pt) {
         const elt = this.overlayPointsId[pt.id];
         console.log("Removing overlay point " + pt.id);
@@ -207,7 +206,6 @@ function ConvexHullViewer(svg, ps) {
         this.overlayGroup.removeChild(elt);
     }
 
-    // Function to draw the final edges
     this.drawFinalEdges = function (neighbors) {
         for (let i = 0; i < neighbors.length - 1; i++) {
             let pt1 = neighbors[i];
@@ -216,7 +214,6 @@ function ConvexHullViewer(svg, ps) {
         }
     }
 
-    // Function to check if an edge should be removed
     this.checkIfEdgeShouldBeRemoved = function (pt) {
         for (let i = this.edgeElts.length - 1; i >= 0; i--) {
             let edge = this.edgeElts[i];
@@ -241,7 +238,8 @@ function ConvexHullViewer(svg, ps) {
         currElt.classList.add("highlight");
         currElt.setAttributeNS(null, "cx", pt.x);
         currElt.setAttributeNS(null, "cy", pt.y);
-        currElt.id = "current";
+        currElt.setAttributeNS(null, "fill", "white");
+        currElt.setAttributeNS(null, "id", "current");
         this.currGroup.appendChild(currElt);
         // this.svg.appendChild(currElt);
     }
@@ -250,18 +248,17 @@ function ConvexHullViewer(svg, ps) {
     this.markCurrent = function (pt) {
         // Remove old current point
         old = document.getElementById("current");
-        // this.svg.removeChild(old);
         this.currGroup.removeChild(old);
         // Add new current point
         this.current = pt;
-        const elt = document.createElementNS(SVG_NS, "circle");
-        elt.classList.add("highlight");
-        elt.setAttributeNS(null, "cx", pt.x);
-        elt.setAttributeNS(null, "cy", pt.y);
-        elt.setAttributeNS(null, "fill", "white");
-        elt.id = "current";
+        const currElt = document.createElementNS(SVG_NS, "circle");
+        currElt.classList.add("highlight");
+        currElt.setAttributeNS(null, "cx", pt.x);
+        currElt.setAttributeNS(null, "cy", pt.y);
+        currElt.setAttributeNS(null, "fill", "white");
+        currElt.setAttributeNS(null, "id", "current");
         // this.svg.appendChild(elt);
-        this.currGroup.appendChild(elt);
+        this.currGroup.appendChild(currElt);
     }
 
     // Step for visiting a new point
@@ -298,15 +295,6 @@ function ConvexHullViewer(svg, ps) {
         for (let i = 0; i < notNecessary.length; i++) {
             notNecessary[i].parentNode.removeChild(notNecessary[i]);
         }
-
-        // recreate svg group for displaying overlays
-        this.overlayGroup = document.createElementNS(SVG_NS, "g");
-        this.svg.appendChild(this.overlayGroup);
-
-        // recreate svg group for displaying currents
-        this.currGroup = document.createElementNS(SVG_NS, "g");
-        this.currGroup.id = "currents";
-        this.svg.appendChild(this.currGroup);
     }
 
 }
@@ -322,7 +310,6 @@ function ConvexHull(ps, viewer) {
 
     this.steps = [];       // an array of steps taken while running the algorithm
     this.started = false;  // a boolean indicating whether the algorithm has started
-    this.currAnimation = null; // the current animation
 
     // start a visualization of the Graham scan algorithm performed on ps
     this.start = function () {
@@ -333,15 +320,10 @@ function ConvexHull(ps, viewer) {
             return;
         }
 
-        this.viewer.reset();
-
         // Check if algorithm has already started
         if (this.started) {
-            // Reset
-            this.started = false;
-            this.stopAnimation(this.currAnimation);
+            // Reset the visualization
             this.viewer.reset();
-            this.steps = [];
         }
 
         // Get the convex hull of the point set
@@ -380,21 +362,16 @@ function ConvexHull(ps, viewer) {
 
     // Stop animation
     this.stopAnimation = function (ani) {
+        console.log("done!");
         clearInterval(ani);
-        if (this.started){
-            console.log("done!");
-            viewer.drawFinalEdges(this.start_ps.points);
-            console.log("Final Hull: " + this.start_ps.points);
-            return
-        } else {
-            console.log("Resetting")
-            return
-        }
+        viewer.drawFinalEdges(this.start_ps.points);
+        console.log("Final Hull: " + this.start_ps.points);
+        return
     }
 
     // Animate entire convex hull
     this.animate = function () {
-
+       
         // Check if algorithm has started
         if (!this.started) {
             console.log("Algorithm has not started");
@@ -404,17 +381,17 @@ function ConvexHull(ps, viewer) {
         // Get the number of steps
         let numSteps = this.steps.length;
         console.log("Animating entire hull. Length of steps is " + numSteps);
-
+       
         // Counter for number of steps
         let j = 0;
 
         // Animate entire convex hull
-        this.currAnimation = setInterval(() => {
+        let animation = setInterval(() => {
             if (j < numSteps) {
                 this.step();
                 j++;
             } else {
-                this.stopAnimation(this.currAnimation);
+                this.stopAnimation(animation);
             }
         }, 1000);
     }
@@ -455,25 +432,25 @@ function ConvexHull(ps, viewer) {
         // Add the second point to the upper list
         secondUpper = this.ps.points[1];
         upperList.push(this.ps.points[1]);
-        this.steps.push(function () { viewer.visitPointStep(secondUpper) });
+        this.steps.push(function () {viewer.visitPointStep(secondUpper)});
 
         // Get the upper hull
         for (let i = 2; i < n; i++) {
             // Get the current point and add it to the upperList
             let pt = this.ps.points[i];
             upperList.push(pt);
-            this.steps.push(function () { viewer.visitPointStep(pt) });
+            this.steps.push(function () {viewer.visitPointStep(pt)});
 
             // While upperList contains more than two points AND the last three points in upperList do not make a right turn
             while ((upperList.length > 2) && !isRightTurn(upperList[upperList.length - 3], upperList[upperList.length - 2], upperList[upperList.length - 1])) {
                 // Delete the middle of the last three points from upperList
-
+                
                 // Pop off the last point
                 let end = upperList.pop();
 
                 // Pop off the middle point
                 let middle = upperList.pop();
-                this.steps.push(function () { viewer.removePointStep(middle) });
+                this.steps.push(function () {viewer.removePointStep(middle)});
 
                 // Add the end point back
                 upperList.push(end);
@@ -483,30 +460,30 @@ function ConvexHull(ps, viewer) {
         // Add the last point to the lowerList
         lastLower = this.ps.points[n - 1];
         lowerList.push(this.ps.points[n - 1]);
-        this.steps.push(function () { viewer.lowerFirstSteps(lastLower) });
+        this.steps.push(function () {viewer.lowerFirstSteps(lastLower)});
 
         // Add the second to last point to the lowerList
         secondLast = this.ps.points[n - 2];
         lowerList.push(this.ps.points[n - 2]);
-        this.steps.push(function () { viewer.lowerFirstSteps(secondLast) });
+        this.steps.push(function () {viewer.lowerFirstSteps(secondLast)});
 
         // Get the lower hull
         for (let i = n - 3; i >= 0; i--) {
             // Get the current point and add it to the lowerList
             let pt = this.ps.points[i];
             lowerList.push(pt);
-            this.steps.push(function () { viewer.visitPointStep(pt) });
+            this.steps.push(function () {viewer.visitPointStep(pt)});
 
             // While lowerList contains more than two points AND the last three points in lowerList do not make a right turn
             while ((lowerList.length > 2) && !isRightTurn(lowerList[lowerList.length - 3], lowerList[lowerList.length - 2], lowerList[lowerList.length - 1])) {
                 // Delete the middle of the last three points from lowerList
-
+                
                 // Pop off the last point
                 let end = lowerList.pop();
 
                 // Pop off the middle point
                 let middle = lowerList.pop();
-                this.steps.push(function () { viewer.removePointStep(middle) })
+                this.steps.push(function () {viewer.removePointStep(middle)})
 
                 // Add the end point back
                 lowerList.push(end);
@@ -530,7 +507,7 @@ function ConvexHull(ps, viewer) {
 
         // Add the first point to the hull at the end to complete the hull
         hull.addPoint(hull.points[0]);
-        this.steps.push(function () { viewer.visitPointStep(hull.points[0]) });
+        this.steps.push(function () {viewer.visitPointStep(hull.points[0])});
 
         // Return the hull
         return hull;
@@ -547,25 +524,14 @@ function isRightTurn(p1, p2, p3) {
     }
 }
 
-
-// Initialize global variables that cause problems when running in Node.js
-var svg = null;
-var ps = null;
-var chv = null;
-var ch = null;
-
-// Initialize function
-function initialize() {
-    svg = document.querySelector("#convex-hull-box");
-    ps = new PointSet();
-    chv = new ConvexHullViewer(svg, ps);
-    ch = new ConvexHull(ps, chv);
-}
+const svg = document.querySelector("#convex-hull-box");
+const ps = new PointSet();
+const chv = new ConvexHullViewer(svg, ps);
+const ch = new ConvexHull(ps, chv);
 
 try {
     exports.PointSet = PointSet;
     exports.ConvexHull = ConvexHull;
 } catch (e) {
-    initialize();
     console.log("not running in Node");
 }

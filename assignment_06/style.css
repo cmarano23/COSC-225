@@ -40,9 +40,9 @@ svg {
 }
 
 .highlight {
-    fill: white 100% !important;
-    stroke: red !important;
-    stroke-width: 5px !important;
+    fill: rgba(255, 255, 255);
+    stroke: red;
+    stroke-width: 5px;
 }
 
 .overlay-vertex {

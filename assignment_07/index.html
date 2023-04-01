@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Self-Similarity</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="self-similarity.js" defer></script>
+  </head>
+  <body>
+    <div id="root">
+      <h3 class="text">Carson Marano's</h3>
+      <h1 class="text">Self-Similarity</h1>
+      <p class="text">Sierpiński triangle</p>
+      <svg id="recursive-triangles" width="600" height="600" viewBox="0 0 100 100">
+        <defs id="triangle-defs">
+          <polygon id="base-triangle" width="100" height="100" points="0,0 100,0 50,100" stroke="black" stroke-width="0.5%" fill="black"/>
+          <polygon id="triangle-basic" width="100" height="100" points="25,50 75,50 50,0" stroke="black" stroke-width="0.5%"/>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" stroke="black" stroke-width="1%" fill="white"/>
+        <!-- make the origin in the lower left corner -->
+        <g id="triangle-group" transform="matrix(1, 0, 0, -1, 0, 100)"></g>	     
+      </svg>
+    </div>
+  </body>
+</html>

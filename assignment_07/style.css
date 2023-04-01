@@ -1,0 +1,26 @@
+/* Add Your Styles Here! */
+body{
+    background-color: rgb(174, 144, 228);
+    height: 100%;
+    width: 100%;
+}
+
+#root{
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.text{
+    color: black;
+    font-family: helvetica;
+}
+
+#main-box{
+    position: relative;
+    align-items: center;
+    text-align: center;
+    stroke: black;
+    fill: rgb(174, 144, 228);
+    stroke-width: 3px;
+}

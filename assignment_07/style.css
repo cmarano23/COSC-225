@@ -11,9 +11,17 @@ body{
     position: relative;
 }
 
+#text-box{
+    position: relative;
+    align-items: center;
+    text-align: center;
+}
+
 .text{
+    margin: auto;
     color: black;
     font-family: helvetica;
+    width: 75%;
 }
 
 #main-box{

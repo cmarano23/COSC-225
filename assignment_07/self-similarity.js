@@ -1,6 +1,6 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const MAX_NUM_TRI = 5;
+const MAX_NUM_TRI = 7;
 const BASE_SIZE = 100;
 const HALF = 50;
 const QUARTER = 25;
@@ -52,7 +52,6 @@ let drawIteration = function (depth, parentGroup) {
             drawIteration(depth+1, thisGroup);
         }
     }
-
 }
 
 drawIteration(0, triangleGroup);

@@ -16,12 +16,12 @@
           the previous triangle size. I used the <a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">Sierpiński triangle Wikipedia</a>
           page to help me learn more about the Sierpiński triangle and how to generate it. The controls below allow you to change the 
           depth and the color scheme of the Sierpiński triangle. Note: Depths greater than 9 may need more time to generate.</p>
-          <h4 class="text" id="currentDepth"></h4>
+          <h4 class="text" id="currentDepth">placeholder text.</h4>
       </div>
       <svg id="recursive-triangles" width="600" height="600" viewBox="0 0 100 100">
         <defs id="triangle-defs">
-          <polygon id="base-triangle" width="100" height="100" points="0,0 100,0 50,100" stroke="black" stroke-width="0.5%"/>
-          <polygon id="triangle-basic" width="100" height="100" points="25,50 75,50 50,0" stroke="black" stroke-width="0.5%"/>
+          <polygon id="base-triangle" points="0,0 100,0 50,100" stroke="black" stroke-width="0.5%"/>
+          <polygon id="triangle-basic" points="25,50 75,50 50,0" stroke="black" stroke-width="0.5%"/>
         </defs>
         <rect x="0" y="0" width="100" height="100" fill-opacity="0"/>
         <!-- make the origin in the lower left corner -->

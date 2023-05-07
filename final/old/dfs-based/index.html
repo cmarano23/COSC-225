@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Animated Dijkstra</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="dijkstra.js" defer></script>
+  </head>
+  <body>
+    <div id=root>
+      <h1>Animated Dijkstra's Algorithm</h1>
+      <p>Click on the box below to add vertices and edges.</p>
+      <svg id="graph-box" xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+        <rect width="100%" height="100%" fill="grey"/>
+      </svg>
+      <form>
+        <label for="edgeWeight">Enter Edge Weight:</label>
+        <input type="number" min="1" id="edgeWeight">
+        <button type="button" onclick="getEdgeWeight()">Submit</button>
+      </form>
+      <button onclick="dfs.start()">Start</button> <button onclick="dfs.step()">Step</button> <button onclick="dfs.animate()">Animate</button>
+      <p>Messages:</p>
+      <p id="graph-text-box"></p>
+    </div>
+  </body>
+</html>

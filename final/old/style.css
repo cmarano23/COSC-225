@@ -1,0 +1,52 @@
+/* Add Your Styles Here! */
+body{
+    background-color: rgb(156, 230, 244);
+    height: 100%;
+    width: 100%;
+}
+
+#root{
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.text{
+    color: black;
+    font-family: helvetica;
+}
+
+button{
+    border-radius: 4px;
+}
+
+svg {
+    position: relative;
+    display: block;
+    margin: auto;
+}
+
+#convex-hull-box{
+    position: relative;
+    align-items: center;
+    text-align: center;
+    stroke: black;
+    stroke-width: 3px;
+}
+
+.edge {
+    stroke: black;
+    stroke-width: 4px;
+}
+
+.highlight {
+    fill: rgba(255, 255, 255);
+    stroke: red;
+    stroke-width: 5px;
+}
+
+.overlay-vertex {
+    stroke: yellow;
+    fill: rgb(0, 0, 0, 20%);
+    stroke-width: 5;
+}

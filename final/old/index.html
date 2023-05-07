@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Graham's Scan Algorithm</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="dijkstra.js" defer></script>
+  </head>
+  <body>
+    <div id="root">
+      <h3 class="text">Faraz Khan and Carson Marano's</h3>
+      <h1 class="text">Animated Convex Hull and Graham's Scan Algorithm</h1>
+      <p class="text">Click on the box below to add points, then use the buttons to either animate the entirety of Graham's Scan
+        Algorithm or step through one by one.</p>
+      <p class="text">Hit start to begin (or reset).</p>
+      <svg id="convex-hull-box" xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+        <rect width="100%" height="100%" fill="gray"/>
+      </svg>
+      <p class="text"><u>Controls</u></p>
+      <button onclick="ch.start()">Start</button> <button onclick="ch.step()">Step</button> <button
+        onclick="ch.animate()">Animate</button>
+    </div>
+  </body>
+</html>

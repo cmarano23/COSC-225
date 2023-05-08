@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+// A lot of code is borrowed and built on from Prof. Rosenbaum's DFS example
+
 function Graph(id) {
 	this.id = id;            // (unique) ID of this graph
 	this.vertices = [];      // set of vertices in this graph
@@ -219,17 +221,38 @@ function GraphVisualizer(graph, svg, text) {
 
 	// add a vertex to the visualization by creating an svg element
 	this.addVertex = function (vtx) {
+		// create a group for the vertex and its text
+		this.vertexTextGroup = document.createElementNS(SVG_NS, "g");
+		
+		// add text to the center of each vertex
+		const text = document.createElementNS(SVG_NS, "text");
+		text.setAttribute("x", vtx.x);
+		text.setAttribute("y", vtx.y);
+		text.textContent = vtx.id;
+		text.classList.add("vertex-text");
+		
+		// Draw the vertex
 		const elt = document.createElementNS(SVG_NS, "circle");
 		elt.classList.add("vertex");
 		elt.setAttributeNS(null, "cx", vtx.x);
 		elt.setAttributeNS(null, "cy", vtx.y);
 
+		// add event listeners for clicking on the vertex
 		elt.addEventListener("click", (e) => {
 			e.stopPropagation(); // don't create another vertex (i.e., call event listener for the svg element in addition to the vertex
 			this.clickVertex(vtx);
 		});
 
-		this.vertexGroup.appendChild(elt);
+		// add event listeners for text
+		text.addEventListener("click", (e) => {
+			e.stopPropagation(); // don't create another vertex (i.e., call event listener for the svg element in addition to the vertex
+			this.clickVertex(vtx);
+		});
+
+		this.vertexTextGroup.appendChild(elt);
+		this.vertexTextGroup.appendChild(text);
+		this.vertexGroup.appendChild(this.vertexTextGroup);
+		// this.vertexGroup.appendChild(text);
 		this.vertexElts[vtx.id] = elt;
 	};
 
@@ -254,6 +277,15 @@ function GraphVisualizer(graph, svg, text) {
 		}
 	};
 
+	// function to calculate rotation angle
+	this.getAngle = function (vtx1, vtx2) {
+		if (vtx1.x < vtx2.x) {
+			return Math.atan2(vtx2.y - vtx1.y, vtx2.x - vtx1.x) * 180 / Math.PI;
+		} else {
+			return Math.atan2(vtx1.y - vtx2.y, vtx1.x - vtx2.x) * 180 / Math.PI;
+		}
+	};
+
 	// add an edge to the visualization
 	this.addEdge = function (edge) {
 		const vtx1 = edge.vtx1;
@@ -264,8 +296,19 @@ function GraphVisualizer(graph, svg, text) {
 		edgeElt.setAttributeNS(null, "x2", vtx2.x);
 		edgeElt.setAttributeNS(null, "y2", vtx2.y);
 		edgeElt.classList.add("edge");
+
+		// add text to the center of each edge
+		const text = document.createElementNS(SVG_NS, "text");
+		text.setAttributeNS(null, "x", (vtx1.x + vtx2.x) / 2);
+		text.setAttributeNS(null, "y", (vtx1.y + vtx2.y) / 2);
+		text.textContent = edge.weight;
+		
+		text.setAttribute("transform", "rotate(" + this.getAngle(vtx1, vtx2) + "," + ((vtx1.x + vtx2.x) / 2) + "," + ((vtx1.y + vtx2.y) / 2) + ")");
+		text.classList.add("edge-text");
+
 		this.edgeElts[edge.id] = edgeElt;
 		this.edgeGroup.appendChild(edgeElt);
+		this.edgeGroup.appendChild(text);
 		this.updateTextBox(this.graph.adjacencyLists());
 		console.log("Added edge " + edge.id + " with length of " + edgeElt.getTotalLength());
 	};
@@ -296,12 +339,12 @@ function GraphVisualizer(graph, svg, text) {
 
 	this.highlightEdge = function (e) {
 		const elt = this.edgeElts[e.id];
-		elt.classList.add("highlight");
+		elt.classList.add("highlight-edge");
 	};
 
 	this.unhighlightEdge = function (e) {
 		const elt = this.edgeElts[e.id];
-		elt.classList.remove("highlight");
+		elt.classList.remove("highlight-edge");
 	};
 
 	this.muteEdge = function (e) {
@@ -395,17 +438,26 @@ function Dijkstra(graph, vis) {
 	};
 
 	this.step = function () {
+		// If you are done, return
 		if (this.done) return;
-		// check if execution is finished
+
+		// check if execution is finished (aka all vertices have been visited)
 		if (this.unvisited.length == 0 && this.cur.id != this.startVertex.id) {
 			console.log("Done running Dijkstra's");
+			
+			// Store the last node
 			lastNode = this.cur;
+
+			// Create the shortest path
 			shortestPath = [];
+
+			// While the last node is not null, push it to the shortest path
 			while (lastNode != null) {
 				shortestPath.push(lastNode);
 				lastNode = lastNode.prevNode;
 			}
-			// console.log("Short Path is: " + shortestPath.reverse().map(vertex => vertex.id))
+
+			
 			this.vis.removeOverlayVertex(this.cur);
 			vis.updateTextBox("Shortest Path is: " + shortestPath.reverse().map(vertex => vertex.id) + " Distance: " + this.cur.dist);
 			this.done = true;
@@ -497,19 +549,32 @@ function Dijkstra(graph, vis) {
 		this.curAnimation = null;
 		console.log("animation completed");
 	};
-
-
 }
 
+// function to set edge weight
 function setEdgeWeight() {
 	inputtedEdgeWeight = Number(document.getElementById("edgeWeight").value);
 }
 
-var inputtedEdgeWeight = 1; // default edge weight
+// function to switch between length based edge weight and user inputted edge weight
+// function switchWeight() {
+// 	lengthBasedWeight = !lengthBasedWeight;
+// 	if (lengthBasedWeight) {
+// 		document.getElementById("setWeightButton").disabled = true;
+// 		document.getElementById("buttons").disabled = true;
+// 	} else {
+// 		document.getElementById("setWeightButton").disabled = false;
+// 		document.getElementById("buttons").disabled = false;
+// 	}
+// }
+
+let inputtedEdgeWeight = 1; // default edge weight
+let lengthBasedWeight = false; // default edge weight is not based on length of line
+
 const svg = document.querySelector("#graph-box");
 const text = document.querySelector("#graph-text-box");
 const graph = new Graph(0);
 const gv = new GraphVisualizer(graph, svg, text);
 const dfs = new Dijkstra(graph, gv);
 
-/* TO DO: Add in option to use the length of the line as the edge weight, display the edge weight above each edge*/
+/* TO DO: Add in option to use the length of the line as the edge weight*/

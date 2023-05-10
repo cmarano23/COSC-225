@@ -37,7 +37,6 @@ svg {
 }
 
 .vertex {
-    r: 15px;
     stroke: black;
     fill: white;
     stroke-width: 6;
@@ -90,16 +89,11 @@ svg {
 }
 
 .overlay-vertex {
-    r: 15px;
     stroke: yellow;
     fill: rgb(0, 0, 0, 20%);
     stroke-width: 5;
-    transition-property: cx, cy;
     transition-duration: 250ms;
-
-    /* some options: ease (default), ease-in, ease-out, ease-in-out, linear*/
     transition-timing-function: ease-in;
-    /* transition-delay: 500ms; */
 }
 
 a {

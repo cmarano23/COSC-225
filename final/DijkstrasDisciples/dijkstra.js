@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 // A lot of code is borrowed and built on from Prof. Rosenbaum's DFS example
@@ -186,6 +185,7 @@ function GraphVisualizer(graph, svg, text) {
 	this.addOverlayVertex = function (vtx) {
 		const elt = document.createElementNS(SVG_NS, "circle");
 		elt.classList.add("overlay-vertex");
+		elt.setAttributeNS(null, "r", "15px");
 		elt.setAttributeNS(null, "cx", vtx.x);
 		elt.setAttributeNS(null, "cy", vtx.y);
 		this.overlayGroup.appendChild(elt);
@@ -234,6 +234,7 @@ function GraphVisualizer(graph, svg, text) {
 		// Draw the vertex
 		const elt = document.createElementNS(SVG_NS, "circle");
 		elt.classList.add("vertex");
+		elt.setAttributeNS(null, "r", "15px");
 		elt.setAttributeNS(null, "cx", vtx.x);
 		elt.setAttributeNS(null, "cy", vtx.y);
 

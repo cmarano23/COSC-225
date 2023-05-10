@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Animated Dijkstra</title>
-  <link rel="stylesheet" href="style.css" type="text/css">
-  <script src="dijkstra.js" defer></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <title>Animated Dijkstra</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="dijkstra.js" defer></script>
+  </head>
   <div id=root>
     <div id="center-box">
-      <h3>Faraz Khan and Carson Marano's</h3>
-      <h1>Animated Dijkstra's Algorithm</h1>
-      <p>Below, you can find an interactive and animated display of Dijkstra's Algorithm. You can click anywhere in the box to
-        create vertices. Each vertex is labeled with a number, and you can click on a vertex to select it. Once a vertex is selected, you can
-        select any other vertex to create an edge between the two vertices. The edge will be labeled with a weight, which you can change by entering
-        in a number in the box next to "Enter Edge Weight" and then pressing the "Submit" button. The default value for the edge weight is 1. In order
-        to begin the algorithm, you must select click a vertex and then press the button "Start". After this, you can either press the "Step" button to
-        walk through the algorithm one step at a time, or you can press the "Animate" button to watch the algorithm run automatically.
+      <div id="navbar">
+        <h1> Animated Dijkstra's Algorithm</h1>
+        <h2>Authored by Carson Marano and Faraz Khan</h2>
+        <nav>
+          <a class="active" href="index.html">Home</a>
+          <a href="about.html">About</a>
+        </nav>
+      </div>
+      <h3>Our Animated Dijkstra's implementation</h3>
+      <p>Below, you can find an interactive and animated display of Dijkstra's Algorithm. You can click anywhere in
+        the box to create vertices. Each vertex is labeled with a number, and you can click on a vertex to select it. Once a
+        vertex is selected, you can select any other vertex to create an edge between the two vertices. The edge will be labeled with a weight,
+        which you can change by entering in a number in the box next to "Enter Edge Weight" and then pressing the "Submit" button. The default value for
+        the edge weight is 1. In order to begin the algorithm, you must select click a vertex and then press the button "Start". After this, you can
+        either press the "Step" button to walk through the algorithm one step at a time, or you can press the "Animate" button to watch the algorithm
+        run automatically.
       </p>
       <svg id="graph-box" xmlns="http://www.w3.org/2000/svg" width="600" height="400">
         <rect width="100%" height="100%" fill="white" />
@@ -26,12 +33,11 @@
         <input type="number" min="1" id="edgeWeight">
         <button type="button" onclick="setEdgeWeight()" id="setWeightButton">Submit</button>
       </form>
-      <!-- <button type="button" onclick="switchWeight()">Switch Weight</button> -->
-      <button onclick="dfs.start()">Start</button> <button onclick="dfs.step()">Step</button> <button
-        onclick="dfs.animate()">Animate</button>
+      <button onclick="dijk.start()" id="startButton">Start</button> <button onclick="dijk.step()"
+        id="stepButton">Step</button> <button onclick="dijk.animate()" id="animateButton">Animate</button> <button
+        onclick="dijk.reset()" id="resetButton">Reset</button>
       <p>Messages:</p>
       <p id="graph-text-box"></p>
     </div>
   </div>
-</body>
 </html>

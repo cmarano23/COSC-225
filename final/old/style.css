@@ -1,52 +1,103 @@
-/* Add Your Styles Here! */
-body{
-    background-color: rgb(156, 230, 244);
+body {
+    background-color: rgb(174, 144, 228);
     height: 100%;
     width: 100%;
 }
 
-#root{
+#root {
     align-items: center;
     text-align: center;
     position: relative;
+    font-family: Helvetica;
 }
 
-.text{
-    color: black;
-    font-family: helvetica;
-}
-
-button{
-    border-radius: 4px;
-}
-
-svg {
-    position: relative;
-    display: block;
+#center-box {
     margin: auto;
+    position: relative;
+    width: 600px;
 }
 
-#convex-hull-box{
+#graph-box {
+    margin: auto;
     position: relative;
     align-items: center;
     text-align: center;
     stroke: black;
     stroke-width: 3px;
+    padding-bottom: 20px;
+}
+
+#buttons{
+    padding-bottom: 10px;
+}
+
+svg {
+    position: relative;
+    display: block;
+}
+
+.vertex {
+    r: 15px;
+    stroke: black;
+    fill: white;
+    stroke-width: 6;
+}
+
+.vertex:hover {
+    fill: rgb(200, 200, 255);
+}
+
+.vertex-text {
+    font-family: Helvetica;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 15px;
+    font-weight: lighter;
+    user-select: none;
+}
+
+.vertex-text:hover {
+    fill: rgb(200, 200, 255);
 }
 
 .edge {
     stroke: black;
-    stroke-width: 4px;
+    stroke-width: 15px;
+}
+
+.edge-text {
+    font-family: Helvetica;
+    font-size: 15px;
+    font-weight: bold;
+    fill: white;
+    stroke-width: 1px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.muted {
+    stroke: rgb(200, 200, 200);
 }
 
 .highlight {
-    fill: rgba(255, 255, 255);
     stroke: red;
-    stroke-width: 5px;
+    stroke-width: 5;
+}
+
+.highlight-edge {
+    stroke: red;
+    stroke-width: 15px;
 }
 
 .overlay-vertex {
+    r: 15px;
     stroke: yellow;
     fill: rgb(0, 0, 0, 20%);
     stroke-width: 5;
+    transition-property: cx, cy;
+    transition-duration: 250ms;
+
+    /* some options: ease (default), ease-in, ease-out, ease-in-out, linear*/
+    transition-timing-function: ease-in;
+    /* transition-delay: 500ms; */
 }

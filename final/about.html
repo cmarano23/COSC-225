@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title> About Our Project! </title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id=root>
+      <div id="center-box">
+        <div id="navbar">
+          <h1> Animated Dijkstra's Algorithm</h1>
+          <h2>Authored by Carson Marano and Faraz Khan</h2>
+          <nav>
+            <a href="index.html">Home</a>
+            <a class="active" href="about.html">About</a>
+          </nav>
+        </div>
+        <h2> Background Info: </h2>
+        <p>Dijkstra's algorithm was created by no other than, <em> Edsger W. Dijkstra </em>.
+          Dijkstra's algorithm finds the shortest path between two nodes that are
+          present in a given weighted graph. There are two main implementations
+          of Dijkstra's algorithm. The first is to have one root node and find the
+          shortest path between that given node and the rest of the nodes. The second
+          common implementation of it is to find the shortest path between two nodes
+          and stop the algorithm once that path has been found.
+        </p>
+        <h2>Our implementation:</h2>
+        <p> Our implementation allows for the user to place any amount of nodes that
+          they want on the SVG element board. The implementation that we did was to give the shortest path
+          from one start vertex to all other vertices that have been placed by the user. Once all of the
+          nodes have been placed by the user, the algorithm begins and highlights the node that it is, while
+          also showing the animation of what the algorithm is doing to bring the user along with it as it finds the
+          shortest weight path.
+        </p>
+        <h2>The numbers:</h2>
+        <p>
+          Dijkstra's algorithm has a run time of O(V + E) where V is the number of vertices that the user
+          places on the svg board and E is the amount of edges between all of the vertices! The reason why this is
+          able to be achieved is because Dijkstra's algorithm uses, usually, a priority queue to keep order of
+          the next node that is to be visited. The run time of of inserting or updating a value in a binary heap, which
+          is a common implementation of a priority queue, is O(logV). Dijkstra's algorithm goes to all of the vertexes
+          a total of one time and relaxes all of the edges a total of one time, thus it takes O(V + E) time to process
+          all vertices and all of the edges. To get the overall run time complexity of the algorithm we simply
+          multiplying these two terms together and
+          that is how we attain the O(V+E) run time!
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

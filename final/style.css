@@ -27,7 +27,7 @@ body {
     padding-bottom: 20px;
 }
 
-#buttons{
+#buttons {
     padding-bottom: 10px;
 }
 
@@ -100,4 +100,51 @@ svg {
     /* some options: ease (default), ease-in, ease-out, ease-in-out, linear*/
     transition-timing-function: ease-in;
     /* transition-delay: 500ms; */
+}
+
+a {
+    flex: 1;
+    text-decoration: none;
+    outline: none;
+    text-align: center;
+    line-height: 3;
+    padding: 20px 40px;
+    color: black;
+    border: 6px solid rgba(49, 48, 48, 0.584);
+    border-radius: 5px;
+
+}
+
+a:link,
+a:focus {
+    background: palegoldenrod;
+    color: black;
+}
+
+a:hover {
+    background: gray;
+}
+
+a:active {
+    background: rgb(88, 0, 139);
+    color: white;
+}
+
+.active {
+    background: rgb(88, 0, 139);
+    color: white;
+}
+
+#navbar {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 200px;
+    top: 0px;
+    padding-bottom: 35px;
+    border-radius: 20px;
+    background-color: white;
 }

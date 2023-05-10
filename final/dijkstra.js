@@ -101,7 +101,7 @@ function Vertex(id, graph, x, y) {
 	this.x = x;          // x coordinate of location
 	this.y = y;          // y coordinate of location
 	this.dist = Infinity;
-	this.prevNode = null;
+	this.prevVertex = null;
 
 	this.neighbors = []; // the adjacency list of this vertex
 
@@ -127,9 +127,9 @@ function Vertex(id, graph, x, y) {
 	};
 
 	this.setDist = function (vtx, d) {
-		if (d < this.dist) {
+		if ( d < this.dist) {
 			this.dist = d + vtx.dist;
-			this.prevNode = vtx;
+			this.prevVertex = vtx;
 		}
 	};
 }
@@ -347,6 +347,15 @@ function GraphVisualizer(graph, svg, text) {
 		elt.classList.remove("highlight-edge");
 	};
 
+	this.unhighlightAll = function () {
+		for (vtx of this.graph.vertices) {
+			this.unhighlightVertex(vtx);
+		}
+		for (e of this.graph.edges) {
+			this.unhighlightEdge(e);
+		}
+	};
+
 	this.muteEdge = function (e) {
 		const elt = this.edgeElts[e.id];
 		elt.classList.add("muted");
@@ -399,136 +408,290 @@ function Dijkstra(graph, vis) {
 	this.startVertex = null;
 	this.endVertex = null;
 	this.curAnimation = null;
-
+	this.active = false;
+	this.adjMap = null;
 	this.visited = [];
 	this.unvisited = [];
-	this.neighborIndex = 0;
+	this.curVisitedNeighbors = [];
 	this.cur = null;
 	this.done = false;
 
 	this.start = function () {
-		this.startVertex = vis.highVertices.pop();
+		// Enable step, animate, and reset buttons
+		document.getElementById("stepButton").disabled = false;
+		document.getElementById("animateButton").disabled = false;
+		document.getElementById("resetButton").disabled = false;
 
-		if (this.startVertex == null) {
-			vis.updateTextBox("Please select start vertex and start again.");
-			return;
+		if (!this.active) {
+			
+			// The start vertex is the last highlighted one
+			this.startVertex = vis.highVertices.pop();
+
+			// If there is no start vertex, return
+			if (this.startVertex == null) {
+				vis.updateTextBox("Please select start vertex and start again.");
+				return;
+			}
+
+			// Set the start vertex's distance to 0
+			this.startVertex.dist = 0;
+
+			// Create the visited and unvisited lists
+			this.visited = [];
+			this.unvisited = [];
+
+			// Set cur to the start vertex
+			this.cur = this.startVertex;
+			// this.curUnvisitedNeighbors = this.cur.neighbors.filter(vtx => !this.visited.includes(vtx));
+
+			// Add an overlay to the current
+			this.vis.addOverlayVertex(this.cur);
+
+			// Mute everything but the start vertex
+			this.vis.muteAll();
+			this.vis.unmuteVertex(this.startVertex);
+
+			// Get the adjacency maps
+			this.adjMaps = this.graph.getAdjacencyMaps();
+
+			console.log("Starting Dijkstra's Algorithm from vertex " + this.startVertex.id);
+
+			// Set active to true
+			this.active = true;
+
+			// disable the start button
+			document.getElementById("startButton").disabled = true;
+
+		} else {
+			console.log("Start pressed while Dijkstra's Algorithm is already running");
+
+			// unhighlight everything
+			this.vis.unhighlightAll();
+
+			// Reset the distances
+			for (vtx of this.graph.vertices) {
+				vtx.dist = Infinity;
+			}
+
+			// Set active to false
+			this.active = false;
+
+			// Reset the animation
+			this.curAnimation = null;
+
+			// Recall start
+			this.start();
+
 		}
 
-		this.startVertex.dist = 0;
-
-		this.visited = [];
-		this.unvisited = [];
-
-		this.cur = this.startVertex;
-		this.vis.addOverlayVertex(this.cur);
-
-		this.vis.muteAll();
-		this.vis.unmuteVertex(this.startVertex);
-
-		adjMap = this.graph.getAdjacencyMaps();
-
-		console.log("Starting Dijkstra's Algorithm from vertex " + this.startVertex.id);
-
-	};
-
-	this.runDijkstra = function () {
-		while (!done) {
-			this.step();
-		}
 	};
 
 	this.step = function () {
-		// If you are done, return
-		if (this.done) return;
-
 		// check if execution is finished (aka all vertices have been visited)
-		if (this.unvisited.length == 0 && this.cur.id != this.startVertex.id) {
+		if (this.done) {
 			console.log("Done running Dijkstra's");
-			
-			// Store the last node
-			lastNode = this.cur;
 
-			// Create the shortest path
-			shortestPath = [];
+			// Store distances and paths as strings
+			let results = "<u>The Shortest Path from Starting Vertex " + this.startVertex.id + " to Every Other Vertex</u>";
 
-			// While the last node is not null, push it to the shortest path
-			while (lastNode != null) {
-				shortestPath.push(lastNode);
-				lastNode = lastNode.prevNode;
+			// For each vertex, print the shortest path
+			for (vtx of this.graph.vertices) {
+
+				// Skip the start vertex
+				if (vtx.id == this.startVertex.id) continue;
+
+				// Add line break
+				results += "<br>";
+
+				// Get the total distance and vertex id
+				results += vtx.id + " has total distance of " + vtx.dist + " and follows the path: ";
+
+				// Get the path
+				path = [];
+				current = vtx;
+				while (current.prevVertex){
+					path.push(current.prevVertex.id);
+					current = current.prevVertex;
+				}
+
+				// Append path to the results
+				for (pathVtx of path.reverse()) {
+					results += pathVtx + " -> ";
+				}
+				
+				// Add the last vertex id to the path
+				results += vtx.id;
 			}
 
+			// Print the shortest path and remove active vertex overlay
+			vis.updateTextBox(results);
 			
-			this.vis.removeOverlayVertex(this.cur);
-			vis.updateTextBox("Shortest Path is: " + shortestPath.reverse().map(vertex => vertex.id) + " Distance: " + this.cur.dist);
-			this.done = true;
+			// Set done to true
+			this.active = false;
+
+			// Return
 			return;
 		}
 
-		// find the next unvisited neighbor of this.cur
-		const next = this.nextUnvisitedNeighbor();
+		// find the next unvisited neighbor
+		let next = this.nextUnvisitedNeighbor(this.cur);
 
+		if (next != null && this.unvisited.length > 0) {
+			// If next is not null, check the possibility of a shorter path
+			console.log("unvisited is " + this.unvisited);
+			if (this.nextUnvisitedNeighbor(this.unvisited[0]) != null) {
+				// Set possibleNext
+				let possibleNext = this.nextUnvisitedNeighbor(this.unvisited[0]);
+				
+				// Get all edges that contain possibleNext
+				let possibleEdges = this.graph.edges.filter(e => e.vtx1.id == possibleNext.id || e.vtx2.id == possibleNext.id);
+
+				// Check to see if any of the possibleEdges have vertices that are visited
+				if (possibleEdges.filter(e => this.visited.includes(e.vtx1) || this.visited.includes(e.vtx2) || this.curVisitedNeighbors.includes(e.vtx1) || this.curVisitedNeighbors.includes(e.vtx2)).length > 0) {
+
+					// Check to see if the distance to possibleNext is shorter than the distance to next
+					if (this.adjMaps[this.cur.id].get(next.id) > this.adjMaps[this.unvisited[0].id].get(possibleNext.id)) {
+						old = next;
+						next = possibleNext;
+						this.curVisitedNeighbors = [];
+						this.curVisitedNeighbors.push(this.cur);
+						this.vis.moveOverlayVertex(this.cur, this.unvisited[0]);
+						this.cur = this.unvisited[0];
+						this.unvisited.splice(0, 1);
+						console.log("Found a shorter edge at " + next.id + " so adding " + old.id + " back to front of unvisited");
+						this.unvisited.push(old);
+					}
+				}
+			}
+		}
+
+		// If next is null, then we have no more neighbors to visit
 		if (next == null) {
-			this.neighborIndex = 0;
-			// if no next neighbor, cur is no longer active
+			// Reset the curVisitedNeighbors
+			this.curVisitedNeighbors = [];
+
+			console.log("No more unvisited neighbors of " + this.cur.id);
+
+			// if no next neighbor, cur has now been fully visited
 			this.visited.push(this.cur);
-			// const prev = this.unvisited.pop();
-			// this.vis.unhighlightVertex(prev);
+
+			// If there are still unvisited nodes, set the next node to the next unvisited node
 			if (this.unvisited.length > 0) {
-				const [nextNode, idx] = this.minUnvisitedIndex();
-				this.unvisited.splice(idx, 1);
-				// const edge = this.graph.getEdge(prev, this.cur);
-				// this.vis.unhighlightEdge(edge);
+				// Get the next node
+				const nextNode = this.unvisited[0];
+				console.log("cur is now " + nextNode.id);
+				this.unvisited.splice(0, 1);
 				this.vis.moveOverlayVertex(this.cur, nextNode);
 				this.cur = nextNode;
-
 			} else {
+				// Remove the overlay vertex and set cur to null
+				console.log("unvisited is empty, so cur is now null");
 				this.vis.removeOverlayVertex(this.cur);
 				this.cur = null;
+				this.done = true;
 			}
+
+			// Return
 			return;
-		}
 
-		const edge = this.graph.getEdge(this.cur, next);
-		next.setDist(this.cur, edge.weight);
-		// console.log(next);
-		vis.unmuteEdge(edge);
-		vis.highlightEdge(edge);
-		vis.unmuteVertex(next);
-		vis.highlightVertex(next);
-		this.neighborIndex++;
-		// this.vis.moveOverlayVertex(this.cur, next);
-		// this.cur = next;
-		if (!this.unvisited.find(vertex => vertex.id == next.id)) this.unvisited.push(next);
+		} else {
+			// If next is not null, then we have a neighbor to visit
+			console.log("Next unvisited neighbor of " + this.cur.id + " is " + next.id);
+
+			// Get the next edge
+			const edge = this.graph.getEdge(this.cur, next);
+
+			// Call set distance on the next node with dist set to the edge weight
+			next.setDist(this.cur, edge.weight);
+
+			// Visual effects
+			vis.unmuteEdge(edge);
+			vis.highlightEdge(edge);
+			vis.unmuteVertex(next);
+			vis.highlightVertex(next);
+
+			// Add the next vertex to the unvisited list
+			if (!this.unvisited.includes(next)){
+				this.unvisited.unshift(next);
+			}
+
+			// Add the next vertex to the curVisitedNeighbors list
+			this.curVisitedNeighbors.push(next);
+		}
 	};
 
-	this.nextUnvisitedNeighbor = function () {
-		// if (this.neighborIndex >= this.cur.neighbors.length) return null;
-		while (this.neighborIndex < this.cur.neighbors.length) {
-			node = this.cur.neighbors[this.neighborIndex];
-			if (!this.visited.includes(node)) {
-				return node;
+	this.nextUnvisitedNeighbor = function (vertex) {
+		// make sure cur is not null
+		if (vertex == null) return null;
+		
+		console.log("Getting next unvisited neighbor of " + vertex.id);
+		
+		// List of possible neighbors
+		let possibleNeighbors = vertex.neighbors.filter(vtx => !this.curVisitedNeighbors.includes(vtx) && !this.visited.includes(vtx) && (vtx.id != this.cur.id));
+		
+		if (possibleNeighbors.length == 0){
+			console.log("No possible neighbors of " + vertex.id);
+			return null;
+		} else if (possibleNeighbors.length == 1){
+			// If there is one, return one
+			console.log("Only possible neighbor of " + this.cur.id + " is " + possibleNeighbors[0].id);
+			return possibleNeighbors[0];
+		} else {
+			// If there are multiple, return the one with the lowest distance
+
+			// Set the lowest distance vertex to the first vertex
+			let lowestDistVertex = possibleNeighbors[0];
+
+			// Loop through and find the lowest distance vertex
+			for (vtx of possibleNeighbors){
+				if (this.adjMaps[vertex.id].get(vtx.id) < this.adjMaps[vertex.id].get(lowestDistVertex.id)){
+					lowestDistVertex = vtx;
+				}
 			}
-			this.neighborIndex++;
+
+			console.log("Lowest distance neighbor of " + vertex.id + " is " + lowestDistVertex.id);
+
+			// Return the lowest distance vertex
+			return lowestDistVertex;
 		}
-		return null;
 	};
 
-	this.minUnvisitedIndex = function () {
-		node = { dist: Infinity };
-		idx = -1;
-		for (const [i, vtx] of this.unvisited.entries()) {
-			if (vtx.dist < node.dist) {
-				node = vtx;
-				idx = i;
-			}
+	this.reset = function () {
+		// enable the start button and disable every other button
+		document.getElementById("startButton").disabled = false;
+		document.getElementById("stepButton").disabled = true;
+		document.getElementById("resetButton").disabled = true;
+		document.getElementById("animateButton").disabled = true;
+
+		// stop animation
+		this.stopAnimation();
+		
+		// unhighlight everything
+		this.vis.unhighlightAll();
+
+		// unmute everything
+		this.vis.unmuteAll();
+
+		// Reset the distances
+		for (vtx of this.graph.vertices) {
+			vtx.dist = Infinity;
 		}
 
-		return [node, idx];
+		// reset all the variables
+		this.startVertex = null;
+		this.endVertex = null;
+		this.curAnimation = null;
+		this.active = false;
+		this.adjMap = null;
+		this.visited = [];
+		this.unvisited = [];
+		this.cur = null;
+		this.done = false;
 	};
 
 	this.animate = function () {
+		document.getElementById("stepButton").disabled = true;
 		if (this.curAnimation == null) {
-			this.start();
 			this.curAnimation = setInterval(() => {
 				this.animateStep();
 			}, 1000);
@@ -536,8 +699,7 @@ function Dijkstra(graph, vis) {
 	};
 
 	this.animateStep = function () {
-		if (!this.done) {
-			console.log("taking a step from vertex " + this.cur.id);
+		if (this.active) {
 			this.step();
 		} else {
 			this.stopAnimation();
@@ -556,25 +718,16 @@ function setEdgeWeight() {
 	inputtedEdgeWeight = Number(document.getElementById("edgeWeight").value);
 }
 
-// function to switch between length based edge weight and user inputted edge weight
-// function switchWeight() {
-// 	lengthBasedWeight = !lengthBasedWeight;
-// 	if (lengthBasedWeight) {
-// 		document.getElementById("setWeightButton").disabled = true;
-// 		document.getElementById("buttons").disabled = true;
-// 	} else {
-// 		document.getElementById("setWeightButton").disabled = false;
-// 		document.getElementById("buttons").disabled = false;
-// 	}
-// }
-
 let inputtedEdgeWeight = 1; // default edge weight
 let lengthBasedWeight = false; // default edge weight is not based on length of line
+
+// Default behavior should have step, animate, and reset buttons disabled
+document.getElementById("stepButton").disabled = true;
+document.getElementById("animateButton").disabled = true;
+document.getElementById("resetButton").disabled = true;
 
 const svg = document.querySelector("#graph-box");
 const text = document.querySelector("#graph-text-box");
 const graph = new Graph(0);
 const gv = new GraphVisualizer(graph, svg, text);
-const dfs = new Dijkstra(graph, gv);
-
-/* TO DO: Add in option to use the length of the line as the edge weight*/
+const dijk = new Dijkstra(graph, gv);
